@@ -8,16 +8,35 @@
 <body>
     <h3>Create New Listings</h3>
     <form method="post" action="/listings">
-<input type="text" name="listing[title]"   placeholder="enter title"><br><br>
+        <div>
+            <label for="title" class="form-label">Title</label>
+            <input type="text" name="listing[title]"   placeholder="enter title" class="form-label"><br><br>
+        </div>
+        <div>
+            <label for="description" class="form-label">Description</label>
+<textarea type="text"  name="listing[description]" placeholder="enter description" class="form-label"></textarea><br><br>
 
-<textarea type="text"  name="listing[description]" placeholder="enter description"></textarea><br><br>
+        </div>
+<div>
+    <label for="url" class="form-label">Image URL</label>
 
-<input type="text"  name="listing[image]" placeholder="enter image URL/link"><br><br>
+    <input type="text"  name="listing[image]" placeholder="enter image URL/link" class="form-label"><br><br>
+</div>
+<div>
+    <label for="price" class="form-label">Price</label>
 
-<input type="number" name="listing[price]" placeholder="enter price"><br><br>
+    <input type="number" name="listing[price]" placeholder="enter price" class="form-label"><br><br>
+</div>
+<div>
+    <label for="country" class="form-label">Country</label>
 
-<input type="text" name="listing[country]" placeholder="enter country"><br><br>
-<input type="text" name="listing[location]" placeholder="enter location"><br><br>
+    <input type="text" name="listing[country]" placeholder="enter country" class="form-label"><br><br>
+</div>
+<div>
+    <label for="location" class="form-label">Location</label>
+    <input type="text" name="listing[location]" placeholder="enter location" class="form-label"><br><br>
+</div>
+
 
 <button>Add</button>
     </form>

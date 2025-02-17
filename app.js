@@ -54,6 +54,7 @@ app.put("/listings/:id",async (req,res)=>{
 //Show Route
 app.get("/listings/:id",async (req,res)=>{
     let {id}=req.params;
+    id = id.trim();
     const listing=await Listing.findById(id);
     res.render("listings/show.ejs",{listing});
 
