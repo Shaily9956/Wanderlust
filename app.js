@@ -2,7 +2,9 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const session = require('express-session')
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 
 const port = 8080;
 const path = require("path");
@@ -19,9 +21,13 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")))
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const User = require("./models/user"); 
 
+
+//Routers
 const listings=require("./routes/listing.js");
 const reviews=require("./routes/reviews.js");
+const user=require("./routes/user.js");
 
 app.use(session({
   secret: 'mysupersecretcode',  
@@ -36,6 +42,17 @@ app.use(session({
 }));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+app.use((req, res, next) => {
+  res.locals.currUser = req.user;
+  next();
+});
+
+
 main()
   .then(() => {
     console.log("connected to DB");
@@ -47,6 +64,51 @@ main()
 async function main() {
   await mongoose.connect(MONGO_URL);
 }
+
+
+
+// app.post("/registeredUser", async (req, res) => {
+//   try {
+//     let { username, email } = req.body;
+    
+//     let newUser = new User({ email, username });
+//     const registeredUser = await User.register(newUser, password);
+//     req.login(registeredUser, (err) => {
+//       if (err) {
+//         next(err);
+//       }
+//       res.locals.currUser = req.user;
+//       res.send("Successfully registered user");
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.send("Error Occurred");
+//   }
+// });
+
+// //Sign In Authentication
+
+// app.post('/travelWorld/signIn',
+//   passport.authenticate("local", { failureRedirect: "/signIn" }),
+//   async (req, res) => {
+//     res.locals.currUser = req.user;
+//     res.redirect("/travelWorld/home");
+//   }
+// );
+
+// //Sign Out Authentication
+
+// app.get("/travelWorld/signOut", async (req, res) => {
+//   req.logOut((err) => {
+//     if (err) {
+//       console.log(err);
+//     }
+//     res.locals.currUser = undefined;
+//     res.redirect("/travelWorld/home");
+//   })
+// });
+
+
 app.get("/", (req, res) => {
   res.send("Hii i am root");
 });
@@ -58,7 +120,8 @@ app.use((req, res, next) => {
 });
 
 app.use("/listings",listings);
-app.use("/listings/:id/reviews",reviews);
+app.use("/listings",listings);
+app.use("/",user);
 
 
 
