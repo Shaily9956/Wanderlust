@@ -47,10 +47,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-app.use((req, res, next) => {
-  res.locals.currUser = req.user;
-  next();
-});
+
 
 
 main()
@@ -67,60 +64,21 @@ async function main() {
 
 
 
-// app.post("/registeredUser", async (req, res) => {
-//   try {
-//     let { username, email } = req.body;
-    
-//     let newUser = new User({ email, username });
-//     const registeredUser = await User.register(newUser, password);
-//     req.login(registeredUser, (err) => {
-//       if (err) {
-//         next(err);
-//       }
-//       res.locals.currUser = req.user;
-//       res.send("Successfully registered user");
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.send("Error Occurred");
-//   }
-// });
-
-// //Sign In Authentication
-
-// app.post('/travelWorld/signIn',
-//   passport.authenticate("local", { failureRedirect: "/signIn" }),
-//   async (req, res) => {
-//     res.locals.currUser = req.user;
-//     res.redirect("/travelWorld/home");
-//   }
-// );
-
-// //Sign Out Authentication
-
-// app.get("/travelWorld/signOut", async (req, res) => {
-//   req.logOut((err) => {
-//     if (err) {
-//       console.log(err);
-//     }
-//     res.locals.currUser = undefined;
-//     res.redirect("/travelWorld/home");
-//   })
-// });
-
-
 app.get("/", (req, res) => {
   res.send("Hii i am root");
 });
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
+  res.locals.currUser = req.user;
   
   next();
 });
 
 app.use("/listings",listings);
-app.use("/listings",listings);
+app.use("/listings/:id/reviews", reviews);
+
+
 app.use("/",user);
 
 
